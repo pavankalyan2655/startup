@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: telangana-private-jobs-api
+    name: tgmagazine-api
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile

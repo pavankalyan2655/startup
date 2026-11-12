@@ -13,7 +13,7 @@ For further reference, please consider the following sections:
 * [Spring Boot Actuator](https://docs.spring.io/spring-boot/4.1.2/reference/actuator/index.html)
 * [SpringDoc OpenAPI](https://springdoc.org/)
 
-### TGPJ Authentication API
+### TGMagazine Authentication API
 
 Start MongoDB locally, then run the backend with `.\gradlew.bat bootRun`. The project keeps the existing MongoDB database name `Home` and stores users in the `user` collection. Override the connection with `MONGODB_URI` when needed.
 
