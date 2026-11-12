@@ -15,9 +15,9 @@ For further reference, please consider the following sections:
 
 ### TGMagazine Authentication API
 
-Start MongoDB locally, then run the backend with `.\gradlew.bat bootRun`. The project keeps the existing MongoDB database name `Home` and stores users in the `user` collection. Override the connection with `MONGODB_URI` when needed.
+Start MongoDB locally, then run the backend with `.\gradlew.bat bootRun`. The project uses the MongoDB database name `Titan` and stores users in the `user` collection. Override the connection with `MONGODB_URI` when needed.
 
-For MongoDB Atlas, activate the `cloud` profile and provide `MONGODB_USERNAME` and `MONGODB_PASSWORD` as environment variables; optionally set `MONGODB_DATABASE` (defaults to `Home`). For example, in PowerShell:
+For MongoDB Atlas, activate the `cloud` profile and provide `MONGODB_USERNAME` and `MONGODB_PASSWORD` as environment variables; optionally set `MONGODB_DATABASE` (defaults to `Titan`). For example, in PowerShell:
 
 ```powershell
 $env:SPRING_PROFILES_ACTIVE = "cloud"
@@ -38,7 +38,7 @@ The local JWT secret in `application.properties` is for development only. Set `J
 4. In MongoDB Atlas, add the Render service's outbound IP addresses to the Atlas IP access list. For a Render free instance those addresses are not static; `0.0.0.0/0` allows access from any IP and is less restrictive, so use it only if necessary and protect the database with a strong unique password.
 5. After deployment, use the Render service URL as the backend base URL in the frontend.
 
-The Render blueprint builds and runs the app with Docker, uses Render's `PORT`, enables the `cloud` profile, and generates a `JWT_SECRET`. Keep all credentials in Render environment variables; never commit them.
+The Render blueprint builds and runs the app with Docker, uses Render's `PORT`, enables the `cloud` profile, checks `/actuator/health`, and generates a `JWT_SECRET`. Keep all credentials in Render environment variables; never commit them.
 
 * `POST /api/auth/signup` — JSON: `{"fullName":"Pavan","email":"user@gmail.com","password":"password123"}`. New public signups receive the `JOB_SEEKER` role.
 * `POST /api/auth/login` — JSON: `{"email":"user@gmail.com","password":"password123"}`. The response includes a bearer token.
