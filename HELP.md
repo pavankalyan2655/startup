@@ -15,9 +15,9 @@ For further reference, please consider the following sections:
 
 ### TGMagazine Authentication API
 
-Start MongoDB locally, then run the backend with `.\gradlew.bat bootRun`. The project uses the MongoDB database name `Titan` and stores users in the `user` collection. Override the connection with `MONGODB_URI` when needed.
+Start MongoDB locally, then run the backend with `.\gradlew.bat bootRun`. The project uses the MongoDB database name `titan` and stores users in the `user` collection. Override the connection with `MONGODB_URI` when needed.
 
-For MongoDB Atlas, activate the `cloud` profile and provide `MONGODB_USERNAME` and `MONGODB_PASSWORD` as environment variables; optionally set `MONGODB_DATABASE` (defaults to `Titan`). For example, in PowerShell:
+For MongoDB Atlas, activate the `cloud` profile and provide `MONGODB_USERNAME` and `MONGODB_PASSWORD` as environment variables; optionally set `MONGODB_DATABASE` (defaults to `titan`). For example, in PowerShell:
 
 ```powershell
 $env:SPRING_PROFILES_ACTIVE = "cloud"
