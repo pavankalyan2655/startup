@@ -8,4 +8,4 @@ WORKDIR /app
 COPY --from=build /app/build/libs/TGMagazine-0.0.1-SNAPSHOT.jar app.jar
 ENV PORT=8080
 EXPOSE 8080
-ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar /app/app.jar"]
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar /app/app.jar --spring.profiles.active=${SPRING_PROFILES_ACTIVE:-cloud}"]
