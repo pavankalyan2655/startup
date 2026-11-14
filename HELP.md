@@ -15,20 +15,18 @@ For further reference, please consider the following sections:
 
 ### TGMagazine Authentication API
 
-Start MongoDB locally, then run the backend with `.\gradlew.bat bootRun`. The project uses the MongoDB database name `titan` and stores users in the `user` collection. Override the connection with `MONGODB_URI` when needed.
+The app connects to the MongoDB cluster specified by the required `MONGODB_URI` environment variable. Set it to the full connection URI for your MongoDB deployment. The app stores users in the `user` collection.
 
-For MongoDB Atlas, activate the `cloud` profile and provide `MONGODB_USERNAME` and `MONGODB_PASSWORD` as environment variables; optionally set `MONGODB_DATABASE` (defaults to `titan`). For example, in PowerShell:
+For example, in PowerShell:
 
 ```powershell
-$env:SPRING_PROFILES_ACTIVE = "cloud"
-$env:MONGODB_USERNAME = "your-atlas-username"
-$env:MONGODB_PASSWORD = "your-url-encoded-password"
+$env:MONGODB_URI = "your-mongodb-connection-uri"
 .\gradlew.bat bootRun
 ```
 
-URL-encode reserved characters in the password used in the MongoDB URI (for example, `@` as `%40`). Keep credentials in environment variables or a secrets manager, not in committed properties files.
+Use your Atlas database user's credentials in the URI and URL-encode reserved characters in the username or password (for example, `@` as `%40`). Keep the full URI in an environment variable or secrets manager, not in committed properties files. For Render, provide `MONGODB_URI` in the service's environment settings.
 
-The local JWT secret in `application.properties` is for development only. Set `JWT_SECRET` to a strong secret (at least 32 bytes) before deployment. `JWT_EXPIRATION_MS` sets token lifetime, and `CORS_ALLOWED_ORIGINS` is a comma-separated list of allowed React origins.
+Set `JWT_SECRET` to a strong secret (at least 32 bytes) in the environment or secrets manager; Render generates it from the blueprint. `JWT_EXPIRATION_MS` sets token lifetime, and `CORS_ALLOWED_ORIGINS` is a comma-separated list of allowed React origins.
 
 ### Deploying to Render
 
