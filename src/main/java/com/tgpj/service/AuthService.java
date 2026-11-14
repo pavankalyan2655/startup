@@ -1,5 +1,7 @@
 package com.tgpj.service;
 
+import java.time.Instant;
+
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +12,7 @@ import com.tgpj.dto.AuthResponse;
 import com.tgpj.dto.LoginRequest;
 import com.tgpj.dto.SignupRequest;
 import com.tgpj.dto.SignupResponse;
+import com.tgpj.dto.UserSummary;
 import com.tgpj.entity.User;
 import com.tgpj.entity.UserRole;
 import com.tgpj.repository.UserRepository;
@@ -40,8 +43,10 @@ public class AuthService {
 			throw new EmailAlreadyExistsException();
 		}
 
-		User user = new User(request.fullName().trim(), email,
-				passwordEncoder.encode(request.password()), UserRole.JOB_SEEKER);
+		String fullName = request.fullName() == null ? "" : request.fullName().trim();
+		User user = new User(fullName, email, passwordEncoder.encode(request.password()), UserRole.USER);
+		user.setCreatedAt(Instant.now());
+		user.setUpdatedAt(user.getCreatedAt());
 		try {
 			userRepository.save(user);
 		}
@@ -57,11 +62,13 @@ public class AuthService {
 				new UsernamePasswordAuthenticationToken(email, request.password()));
 		User user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new IllegalStateException("Authenticated user was not found"));
-		return new AuthResponse(jwtService.generateToken(user), "Bearer",
-				user.getFullName(), user.getEmail(), user.getRole());
+		UserRole effectiveRole = user.getRole();
+		UserSummary summary = new UserSummary(user.getId(), user.getFullName(), user.getEmail(), effectiveRole);
+		String token = jwtService.generateToken(user);
+		return new AuthResponse(token, summary);
 	}
 
 	private String normalizeEmail(String email) {
-		return email.trim().toLowerCase(java.util.Locale.ROOT);
+		return email == null ? "" : email.trim().toLowerCase(java.util.Locale.ROOT);
 	}
 }

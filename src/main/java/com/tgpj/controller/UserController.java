@@ -24,6 +24,6 @@ public class UserController {
 	public UserProfileResponse profile(@AuthenticationPrincipal UserDetails userDetails) {
 		User user = userRepository.findByEmail(userDetails.getUsername())
 				.orElseThrow(() -> new IllegalStateException("Authenticated user was not found"));
-		return new UserProfileResponse(user.getFullName(), user.getEmail(), user.getRole());
+		return new UserProfileResponse(user.getId(), user.getFullName(), user.getEmail(), user.getRole());
 	}
 }

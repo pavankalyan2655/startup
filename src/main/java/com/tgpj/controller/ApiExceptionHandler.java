@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -35,6 +36,12 @@ public class ApiExceptionHandler {
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	public ApiError handleBadCredentials(BadCredentialsException exception, WebRequest request) {
 		return error(HttpStatus.UNAUTHORIZED, "Invalid email or password", request);
+	}
+
+	@ExceptionHandler(AccessDeniedException.class)
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	public ApiError handleAccessDenied(AccessDeniedException exception, WebRequest request) {
+		return error(HttpStatus.FORBIDDEN, "You do not have permission to access this resource", request);
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)

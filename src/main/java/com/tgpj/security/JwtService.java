@@ -46,8 +46,17 @@ public class JwtService {
 
 	public boolean isTokenValid(String token, UserDetails userDetails) {
 		Claims claims = parseClaims(token);
+		String tokenRole = claims.get("role", String.class);
+		String currentRole = userDetails.getAuthorities().stream()
+				.map(authority -> authority.getAuthority())
+				.filter(value -> value.startsWith("ROLE_"))
+				.map(value -> value.substring(5))
+				.findFirst()
+				.orElse("");
 		return claims.getSubject().equals(userDetails.getUsername())
-				&& claims.getExpiration().after(new Date());
+				&& claims.getExpiration().after(new Date())
+				&& tokenRole != null
+				&& tokenRole.equalsIgnoreCase(currentRole);
 	}
 
 	private Claims parseClaims(String token) {

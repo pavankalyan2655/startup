@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.tgpj.entity.User;
+import com.tgpj.entity.UserRole;
 import com.tgpj.repository.UserRepository;
 
 @Service
@@ -22,10 +23,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 		User user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new UsernameNotFoundException("Invalid email or password"));
 
+		UserRole role = user.getRole() == null ? UserRole.USER : user.getRole();
 		return org.springframework.security.core.userdetails.User
 				.withUsername(user.getEmail())
 				.password(user.getPassword())
-				.roles(user.getRole().name())
+				.authorities("ROLE_" + role.name())
 				.build();
 	}
 }
