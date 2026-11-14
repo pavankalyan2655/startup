@@ -15,16 +15,19 @@ For further reference, please consider the following sections:
 
 ### TGMagazine Authentication API
 
-The app connects to the MongoDB cluster specified by the required `MONGODB_URI` environment variable. Set it to the full connection URI for your MongoDB deployment. The app stores users in the `user` collection.
+The app builds its MongoDB connection from two required environment variables: `MONGODB_URI` and `MONGODB_DATABASE`. Set `MONGODB_URI` to the base connection URI including scheme, credentials, and host, but without a database path or query string (for example, `mongodb+srv://<username>:<password>@<cluster-host>`). The app appends `MONGODB_DATABASE` as the database path and stores users in the `user` collection there.
 
 For example, in PowerShell:
 
 ```powershell
-$env:MONGODB_URI = "your-mongodb-connection-uri"
+$env:MONGODB_URI = "mongodb+srv://<username>:<password>@<cluster-host>"
+$env:MONGODB_DATABASE = "your-database-name"
 .\gradlew.bat bootRun
 ```
 
-Use your Atlas database user's credentials in the URI and URL-encode reserved characters in the username or password (for example, `@` as `%40`). Keep the full URI in an environment variable or secrets manager, not in committed properties files. For Render, provide `MONGODB_URI` in the service's environment settings.
+URL-encode reserved characters in the username or password (for example, `@` as `%40`). Keep the URI in an environment variable or secrets manager, not in committed properties files. Set both variables in the Render service environment.
+
+The app defaults to the `local` Spring profile, which loads the JWT signing secret from the ignored `src/main/resources/application-local.properties` file. Set `SPRING_PROFILES_ACTIVE=cloud` in deployment environments; the Render blueprint already does this. MongoDB connection values still come from environment variables.
 
 Set `JWT_SECRET` to a strong secret (at least 32 bytes) in the environment or secrets manager; Render generates it from the blueprint. `JWT_EXPIRATION_MS` sets token lifetime, and `CORS_ALLOWED_ORIGINS` is a comma-separated list of allowed React origins.
 
@@ -32,7 +35,7 @@ Set `JWT_SECRET` to a strong secret (at least 32 bytes) in the environment or se
 
 1. Push this project to a GitHub repository.
 2. In Render, choose **New → Blueprint**, connect the repository, and deploy the `render.yaml` blueprint.
-3. When prompted, enter your Atlas database username and password. Use the database user's password (URL-encoded if it contains reserved URI characters), not an Atlas account password. Enter your deployed frontend's origin for `CORS_ALLOWED_ORIGINS`, such as `https://your-frontend.example`; do not include a path or trailing slash.
+3. When prompted, enter `MONGODB_URI` and `MONGODB_DATABASE`. Use Atlas database-user credentials, not your Atlas account password; URL-encode reserved characters in the username or password. Enter your deployed frontend's origin for `CORS_ALLOWED_ORIGINS`, such as `https://your-frontend.example`; do not include a path or trailing slash.
 4. In MongoDB Atlas, add the Render service's outbound IP addresses to the Atlas IP access list. For a Render free instance those addresses are not static; `0.0.0.0/0` allows access from any IP and is less restrictive, so use it only if necessary and protect the database with a strong unique password.
 5. After deployment, use the Render service URL as the backend base URL in the frontend.
 
